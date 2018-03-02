@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN">
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+            <!-- 常用以下两种 -->
+			<!--<PatternLayout pattern="%d %X{requestId} %t %level %l - %m%n"/>-->
+			<!--<PatternLayout pattern="%d %X{requestId} %t %level %C{1.} - %m%n"/>-->
+			<PatternLayout pattern="%d %X{requestId} %t %level %C{1.} - %m%n"/>
+			<!--
+				释义参考官网：https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout
+                %d{pattern}：时间 (date)  ☆
+                %X{requestId}: 自定义
+                %level：日志级别
+                %t: thread name 如 main (tn, thread, threadName)
+                %T: thread id (tid, threadId),
+                %level: 日志级别，最多输出5位
+                %C{precision}: 输出发出日志记录请求的调用者的全限定类名称 (class)
+                %c{precision}：输出发布日志记录事件的记录器的名称 (logger)
+                	org.apache.commons.Foo
+                        %c{1}: -> Foo
+                        %c{1.}: -> o.a.c.Foo
+                %m{nolookups}{ansi}：日志内容 (msg, message)
+                %M: 日志记录请求的方法名称 （method）
+                %L: 输出发出日志记录请求的行号 (line)
+                %l: 输出产生记录事件的调用者的位置信息, 可以输出类名，方法源代码行(location)
+                %r: 相对于jvm启动过去的时间毫秒数（方便发现启动一段时间后的问题？） (relative)
+                %n：换行
+			-->
+		</Console>
+
+		<RollingFile name="apiRollingFile" fileName="/var/logs/app-log4j2.log" filePattern="/logs/tzbapi-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="%d %X{requestId} %t %level %C{1.} - %m%n"/>
+			<SizeBasedTriggeringPolicy size="100MB" />
+			<DefaultRolloverStrategy max="20" />
+		</RollingFile>
+		
+	</appenders>
+	<loggers>
+		<logger name="org.orh" additivity="false" level="info">
+			<!--<appender-ref ref="apiRollingFile" />-->
+			<appender-ref ref="Console" />
+		</logger>
+		<root level="info">
+			<appender-ref ref="Console" />
+            <!--<appender-ref ref="apiRollingFile"/>-->
+		</root>
+	</loggers>
+</configuration>  
